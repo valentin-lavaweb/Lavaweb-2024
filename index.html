@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en" style="background-color: rgba(4, 5, 12, 1);">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/images/logo_crop.svg" />
+    <link rel="stylesheet" href="/CSS/fonts.css" />
+    <link rel="stylesheet" href="/CSS/preloader.scss" />
+    <link rel="stylesheet" href="/CSS/styles.scss" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lavaweb</title>
+  </head>
+  <body>
+    <div class="preloaderContainer">
+      <div class="preloaderBackground"></div>
+      <div class="preloader">
+        <div class="loaderCircle"></div>
+        <div class="loaderLineMask">
+          <div class="loaderLine"></div>
+        </div>
+      </div>
+    </div>
+    <div id="root"></div>
+    <script>
+      window.addEventListener('load', () => {
+        const preloaderContainer = document.querySelector('.preloaderContainer')
+        const updateProgress = () => {
+          const loadingContainer = document.querySelector('#loadingContainer')
+          if (loadingContainer.hidden === false) {
+            requestAnimationFrame(updateProgress);
+          } else {
+            preloaderContainer.remove()
+            // preloaderContainer.classList.add('hidden')
+            // setTimeout(() => {
+            //   preloaderContainer.remove()
+            // }, 1500);
+          }
+        };
+
+        requestAnimationFrame(updateProgress);
+      });
+    </script>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>

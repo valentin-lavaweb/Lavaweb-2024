@@ -1,0 +1,186 @@
+.about .topNavigationPanel{
+    opacity: 0;
+    transition: 0.35s;
+}
+.about.enter-active .topNavigationPanel, .about.enter-done .topNavigationPanel{
+    opacity: 1;
+    transition: 0.35s;
+}
+.about.exit .topNavigationPanel{
+    opacity: 0;
+    transition: 0.1s 0.4s;
+}
+
+.aboutUsBlock {
+    opacity: 0;
+    transform: translate(7vw, 0vw);
+    transition: 0.25 0.15s;
+}
+.about.enter-active .aboutUsBlock, .about.enter-done .aboutUsBlock{
+    opacity: 1;
+    transform: translate(0vw, 0vw);
+    transition: 0.35s;
+}
+.about.exit .aboutUsBlock{
+    opacity: 0;
+    transform: translate(-15vw, 0vw);
+    transition: 0.15s 0s;
+}
+
+
+
+.about .topRightPanel {
+    transform: translate(7vw, 0vw);
+    opacity: 0;
+    transition: 0.3s 0.15s;
+}
+.about.enter-done .topRightPanel, .about.enter-active .topRightPanel {
+    transform: translate(0vw, 0vw);
+    opacity: 1;
+    transition: 0.3s 0.15s;
+}
+.about.exit .topRightPanel {
+    transform: translate(-15vw, 0);
+    opacity: 0;
+    transition: 0.15s 0.15s;
+}
+
+
+.about .caseCountBlock.n1 .caseNumber {
+    opacity: 0;
+    transition: all 0.2s 0.7s, font-weight 0.2s 0s;
+}
+.about.enter-active .caseCountBlock.n1 .caseNumber, .about.enter-done .caseCountBlock.n1 .caseNumber {
+    opacity: 1;
+    transition: all 0.2s 0.7s, font-weight 0.2s 0s;
+}
+.about.exit .caseCountBlock.n1 .caseNumber {
+    opacity: 0;
+    transition: all 0.1s 0.3s, font-weight 0.2s 0s;
+}
+
+
+
+
+.about .caseLine.n1 {
+    transform-origin: 0 0;
+    transform: scaleX(0);
+    transition: 0.2s 0.8s;
+}
+.about.enter-active .caseLine.n1 , .about.enter-done .caseLine.n1 {
+    transform-origin: 0 0;
+    transform: scaleX(1);
+    transition: 0.2s 0.8s;
+}
+.about.exit .caseLine.n1 {
+    transform-origin: 0 0;
+    transform: scaleX(0);
+    transition: 0.1s 0.25s;
+}
+
+
+
+
+
+.about .caseCountBlock.n2 .caseNumber {
+    opacity: 0;
+    transition: all 0.2s 0.9s, font-weight 0.2s 0s;
+}
+.about.enter-active .caseCountBlock.n2 .caseNumber, .about.enter-done .caseCountBlock.n2 .caseNumber {
+    opacity: 1;
+    transition: all 0.2s 0.9s, font-weight 0.2s 0s;
+}
+.about.exit .caseCountBlock.n2 .caseNumber {
+    opacity: 0;
+    transition: all 0.1s 0.2s, font-weight 0.2s 0s;
+}
+
+
+
+
+
+
+.about .caseLine.n2 {
+    transform-origin: 0 0;
+    transform: scaleX(0);
+    transition: 0.2s 1s;
+}
+.about.enter-active .caseLine.n2, .about.enter-done .caseLine.n2 {
+    transform-origin: 0 0;
+    transform: scaleX(1);
+    transition: 0.2s 1s;
+}
+.about.exit .caseLine.n2 {
+    transform-origin: 0 0;
+    transform: scaleX(0);
+    transition: 0.1s 0.15s;
+}
+
+
+
+
+.about .caseCountBlock.n3 .caseNumber {
+    opacity: 0;
+    transition: all 0.2s 1.1s, font-weight 0.2s 0s;
+}
+.about.enter-active .caseCountBlock.n3 .caseNumber , .about.enter-done .caseCountBlock.n3 .caseNumber {
+    opacity: 1;
+    transition: all 0.2s 1.1s, font-weight 0.2s 0s;
+}
+.about.exit .caseCountBlock.n3 .caseNumber {
+    opacity: 0;
+    transition: all 0.1s 0.1s, font-weight 0.2s 0s;
+}
+
+
+
+
+.about .caseLine.n3 {
+    transform-origin: 0 0;
+    transform: scaleX(0);
+    transition: 0.2s 1.2s;
+}
+.about.enter-active .caseLine.n3 , .about.enter-done .caseLine.n3{
+    transform-origin: 0 0;
+    transform: scaleX(1);
+    transition: 0.2s 1.2s;
+}
+.about.exit .caseLine.n3 {
+    transform-origin: 0 0;
+    transform: scaleX(0);
+    transition: 0.1s 0.05s;
+}
+
+
+
+.about .caseCountBlock.n4 .caseNumber {
+    opacity: 0;
+    transition: all 0.2s 1.3s, font-weight 0.2s 0s;
+}
+.about.enter-active .caseCountBlock.n4 .caseNumber, .about.enter-done .caseCountBlock.n4 .caseNumber {
+    opacity: 1;
+    transition: all 0.2s 1.3s, font-weight 0.2s 0s;
+}
+.about.exit .caseCountBlock.n4 .caseNumber {
+    opacity: 0;
+    transition: all 0.1s 0s, font-weight 0.2s 0s;
+}
+
+
+
+/* .aboutTitle {
+    opacity: 0;
+    transform: translate(7vw, 0vw);
+    transition: 0.25s;
+}
+.about.enter-active .aboutTitle, .about.enter-done .aboutTitle {
+    opacity: 1;
+    transform: translate(0vw, 0vw);
+    transition: 0.25s 0.15s;
+}
+
+.about.exit .aboutTitle{
+    opacity: 0;
+    transform: translate(-7vw, 0vw);
+    transition: 0.25s;
+} */

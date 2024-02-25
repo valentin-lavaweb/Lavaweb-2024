@@ -1,0 +1,102 @@
+.blurContainer {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    // backdrop-filter: blur(0px);
+    z-index: 5;
+
+    &.active {
+        animation: blured 2s 2.5s linear;
+    }
+}
+
+@keyframes blured {
+    0% {
+        backdrop-filter: blur(0px);
+    }
+
+    50% {
+        backdrop-filter: blur(20px);
+    }
+
+    100% {
+        backdrop-filter: blur(0px);
+    }
+    
+}
+
+.loadingContainer {
+    display: flex;
+    justify-content: center;
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(4, 5, 12, 1);
+    opacity: 0;
+    pointer-events: none;
+    z-index: 2;
+    transition: all 3s 3s;
+
+    &.active {
+        pointer-events: auto;
+        opacity: 1;
+    }
+}
+
+.loadingBlock {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: fixed;
+    bottom: 100px;
+    text-transform: uppercase;
+    opacity: 0;
+    transition: all 1s 1.75s, bottom 1s 0s;
+    z-index: 4;
+
+    &.active {
+        bottom: 100px;
+        opacity: 1;
+        transition: all 0.5s 0s;
+    }
+
+    &.bottom {
+        bottom: -100px;
+        opacity: 1;
+        transition: all 0.5s 0s;
+    }
+}
+
+.loadingNumber {
+    font-size: 30px;
+    font-weight: 700;
+    transition: 1s;
+}
+
+.loadingText {
+    text-transform: uppercase;
+    font-size: 14px;
+    letter-spacing: 1.1px;
+    animation: glowingText 3s 0s linear infinite alternate;
+    transition: 1s;
+
+    &.hidden {
+        opacity: 0;
+        transition: 1s;
+    }
+}
+
+@keyframes glowingText {
+    0% {
+        color: rgba(255, 255, 255, 1);
+    }
+
+    100% {
+        color: rgba(255, 255, 255, 0.5);
+    }
+    
+}

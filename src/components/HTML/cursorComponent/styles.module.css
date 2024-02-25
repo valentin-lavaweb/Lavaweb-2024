@@ -1,0 +1,274 @@
+a {
+    /* cursor: none; */
+}
+.cursor {
+    position: fixed;
+    justify-content: center;
+    align-items: center;
+    width: 70px;
+    height: 70px;
+    transform: translate(-50%, -50%);
+    transition: all 0s 0s, opacity 0.5s 0s, width 0.25s 0s, height 0.25s 0s;
+    opacity: 1;
+}
+.cursor.hover {
+    width: 110px;
+    height: 110px;
+    opacity: 0.25;
+    transition: all 0s 0s, opacity 0.5s 1s, width 0.25s 1s, height 0.25s 1s;
+}
+.cursor.hover.click {
+    opacity: 1;
+    transition: all 0s 0s, opacity 0.035s 0s linear;
+}
+
+.cursor * {
+    position: absolute;
+    justify-content: center;
+    align-items: center;
+}
+
+@media (max-width: 768px) {
+    body {
+        cursor: auto;
+    }
+    
+    a {
+        cursor: auto;
+    }
+    .cursor {
+        display: none !important;
+    }
+}
+
+
+
+
+
+
+/* .mainPoint {
+    width: 3px;
+    height: 3px;
+    background: white;
+    border-radius: 50%;
+} */
+
+
+
+
+
+.mainCircle {
+    width: 100%;
+    height: 100%;
+    /* background-color: rgba(0, 0, 0, 0.35); */
+    border-radius: 50%;
+    transition: 0.15s;
+    /* animation: mainCircleA 9s ease-in-out infinite alternate; */
+}
+.cursor.hover .mainCircle {
+    width: 65%;
+    height: 65%;
+    transition: 0.25s 0s ease-in-out;
+}
+.cursor.click .mainCircle {
+    width: 80%;
+    height: 80%;
+    transition: 0.05s 0s ease-in-out;
+}
+.cursor.hover.click .mainCircle {
+    width: 65%;
+    height: 65%;
+    transition: 0s 0s ease-in-out;
+}
+
+.halfCircle1 {
+    width: 100%;
+    height: 100%;
+    /* border: 1px solid white; */
+    transform: translate(0px, -60%);
+    overflow: hidden;
+}
+
+.halfCircle1 .inCircle {
+    width: 100%;
+    height: 100%;
+    border: 1px solid rgba(255,255,255, 0.6);
+    border-radius: 50%;
+    transform: translate(0px, 60%);
+}
+.halfCircle2 {
+    width: 100%;
+    height: 100%;
+    /* border: 1px solid white; */
+    transform: translate(0px, 60%);
+    overflow: hidden;
+}
+
+.halfCircle2 .inCircle {
+    width: 100%;
+    height: 100%;
+    border: 1px solid rgba(255,255,255, 0.6);
+    border-radius: 50%;
+    transform: translate(0px, -60%);
+}
+
+@keyframes mainCircleA {
+    0% {
+        transform: rotate(-15deg);  
+    }
+    100% {
+        transform: rotate(15deg);  
+    }
+}
+
+
+
+
+
+
+.littleCircle {
+    width: 25.5%;
+    height: 25.5%;
+    transform: scale(1) rotate(90deg);
+    transition: 0.5s;
+}
+.cursor.hover .littleCircle {
+    transform: scale(1.5) rotate(180deg);
+    transition: 0.5s 0s ease-in-out;
+}
+.cursor.hover.click .littleCircle {
+    transform: scale(1) rotate(180deg);
+    transition: 0.07s 0s ease-in-out;
+}
+
+
+.littleCircle .halfCircle1 {
+    width: 100%;
+    height: 100%;
+    /* border: 1px solid white; */
+    transform: translate(0px, -65%);
+    overflow: hidden;
+}
+
+.littleCircle .halfCircle1 .inCircle {
+    width: 100%;
+    height: 100%;
+    border: 1px solid rgba(255,255,255, 0.6);
+    border-radius: 50%;
+    transform: translate(0px, 65%);
+}
+.littleCircle .halfCircle2 {
+    width: 100%;
+    height: 100%;
+    /* border: 1px solid white; */
+    transform: translate(0px, 65%);
+    overflow: hidden;
+}
+
+.littleCircle .halfCircle2 .inCircle {
+    width: 100%;
+    height: 100%;
+    border: 1px solid rgba(255,255,255, 0.6);
+    border-radius: 50%;
+    transform: translate(0px, -65%);
+}
+
+
+
+
+
+
+
+.bigCircle {
+    width: 124%;
+    height: 124%;
+    border-radius: 50%;
+    border: 1px dotted rgba(255, 255, 255, 0.75);
+    transition: 0.15s;
+    animation: bigCircleA 30s linear infinite;
+}
+.cursor.hover .bigCircle {
+    width: 45%;
+    height: 45%;
+    transition: 0.3s ease-in-out;
+}
+@keyframes bigCircleA {
+    0% {
+        transform: rotate(0deg);  
+    }
+    100% {
+        transform: rotate(360deg);  
+    }
+}
+
+
+
+
+
+
+
+.points {
+    width: 24%;
+    height: 24%;
+    transform: rotate(90deg);
+    transition: 0.35s ease-in-out;
+}
+.cursor.hover .points {
+    width: 80%;
+    height: 80%;
+    transform: rotate(270deg);
+    transition: transform 0.4s 0s ease-in-out, width 0.5s 0.4s ease-in-out, height 0.5s 0.4s ease-in-out;
+}
+.cursor.hover.click .points {
+    width: 65%;
+    height: 65%;
+    transform: rotate(270deg);
+    transition: 0.07s ease;
+}
+
+.points1 {
+    width: 100%;
+    height: 100%;
+    transform: rotate(0deg);
+    transition: 0.35s ease-in-out;
+}
+.cursor.hover .points1 {
+    transform: rotate(-45deg);
+    transition: 0.35s 0.7s ease-in-out;
+}
+
+.points2 {
+    width: 100%;
+    height: 100%;
+    transform: rotate(0deg);
+    transition: 0.35s ease-in-out;
+}
+.cursor.hover .points2 {
+    transform: rotate(45deg);
+    transition: 0.35s 0.7s ease-in-out;
+}
+
+.point1 {
+    width: 3px;
+    height: 3px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.75);
+    top: 100%;
+    transform: translate(0px, -50%) scaleY(1) rotate(45deg) ;
+}
+.point2 {
+    width: 3px;
+    height: 3px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.75);
+    top: 0%;
+    transform: translate(0px, -50%) scaleY(1) rotate(45deg) ;
+}
+@keyframes pointsA {
+    0% {
+        transform: rotate(0deg);  
+    }
+    100% {
+        transform: rotate(360deg);  
+    }
+}

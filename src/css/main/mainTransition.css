@@ -1,0 +1,109 @@
+/* MAINPAGE */
+.mainPageTitle {
+    opacity: 0;
+    transform: translate(7vw, 0vw);
+    transition: 0.25s;
+}
+.page.enter-done .mainPageTitle {
+    opacity: 1;
+    transform: translate(0vw, 0vw);
+    transition: 0.25s 0.25s;
+}
+.page.enter-active .mainPageTitle {
+    opacity: 1;
+    transform: translate(0vw, 0vw);
+    transition: 0.25s 0.25s;
+}
+.page.exit .mainPageTitle {
+    opacity: 0;
+    transform: translate(-15vw, 0vw);
+    transition: 0.25s 0s;
+}
+
+
+.mainPageDescription .text:first-child{
+    opacity: 0;
+    transform: translate(7vw, 0vw);
+    transition: 0.25s;
+}
+.page.enter-done .mainPageDescription .text:first-child {
+    opacity: 1;
+    transform: translate(0vw, 0vw);
+    transition: 0.25s 0.3s;
+}
+.page.enter-active .mainPageDescription .text:first-child {
+    opacity: 1;
+    transform: translate(0vw, 0vw);
+    transition: 0.25s 0.3s;
+}
+.page.exit .mainPageDescription .text:first-child {
+    opacity: 0;
+    transform: translate(-15vw, 0vw);
+    transition: 0.25s 0.05s;
+}
+
+.mainPageDescription .text:last-child{
+    opacity: 0;
+    transform: translate(7vw, 0vw);
+    transition: 0.25s;
+}
+.page.enter-done .mainPageDescription .text:last-child {
+    opacity: 1;
+    transform: translate(0vw, 0vw);
+    transition: 0.25s 0.35s;
+}
+.page.enter-active .mainPageDescription .text:last-child {
+    opacity: 1;
+    transform: translate(0vw, 0vw);
+    transition: 0.25s 0.35s;
+}
+.page.exit .mainPageDescription .text:last-child {
+    opacity: 0;
+    transform: translate(-15vw, 0vw);
+    transition: 0.25s 0.10s;
+}
+
+
+
+.mainPageLogoBlock {
+    /* transform: translate(7vw, 0%); */
+    opacity: 0;
+    transition: 0.25s 0.1s ease-out;
+}
+.page.enter-done .mainPageLogoBlock {
+    /* transform: translate(0%, 0%); */
+    opacity: 1;
+    transition: 0.25s 0.25s ease-out;
+}
+.page.enter-active .mainPageLogoBlock {
+    /* transform: translate(0%, 0%); */
+    opacity: 1;
+    transition: 0.25s 0.25s ease-out;
+}
+.page.exit .mainPageLogoBlock {
+    /* transform: translate(-15vw, 0%); */
+    opacity: 0;
+    transition: 0.25s 0.1s ease-out;
+}
+
+
+.mainPageAddress {
+    transform: translate(7vw, 0vw);
+    opacity: 0;
+    transition: 0.25s;
+}
+.page.enter-done .mainPageAddress {
+    transform: translate(0vw, 0vw);
+    opacity: 1;
+    transition: 0.25s 0.25s;
+}
+.page.enter-active .mainPageAddress {
+    transform: translate(0vw, 0vw);
+    opacity: 1;
+    transition: 0.25s 0.25s;
+}
+.page.page.exit .mainPageAddress {
+    transform: translate(-15vw, 0%);
+    opacity: 0;
+    transition: 0.25s 0.1s;
+}

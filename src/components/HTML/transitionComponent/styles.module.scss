@@ -1,0 +1,135 @@
+/* LOADING SCREEN */
+.loadingScreen {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    pointer-events: auto;
+    cursor: url('/cursor/lavawebCursor.cur'), default;
+    z-index: 0;
+}
+.loadingScreen.disabled {
+  pointer-events: none;
+  cursor: none;
+}
+.blockMain {
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+}
+.blockMainL {
+    transform: translate(0, 0);
+}
+.blockMainR {
+    transform: translate(100%, 0);
+}
+
+.block {
+    position: fixed;
+    left: 0;
+    top: 50%;
+    width: 100%;
+    background-color: black;
+    transform: translate(0, -50%) scaleX(1);
+}
+.blockMainL .block {
+    transform-origin: 0% 0;
+}
+.blockMainR .block {
+    transform-origin: 100% 0;
+}
+.block1 {
+    height: 100%;
+}
+.block2 {
+    height: 90%;
+}
+.block3 {
+    height: 60%;
+}
+.block4 {
+    height: 40%;
+}
+.block5 {
+    height: 20%;
+}
+.block6 {
+    height: 10%;
+}
+.block7 {
+    height: 5%;
+}
+
+.disabled .block1 {
+    animation: hidingBlock 1s cubic-bezier(0.2,0.1,0.5,1.2) forwards;
+}
+.disabled .block2 {
+    animation: hidingBlock 1s cubic-bezier(0.3,0.1,0.5,1.2) forwards;
+}
+.disabled .block3 {
+    animation: hidingBlock 1s cubic-bezier(0.4,0.1,0.5,1.2) forwards;
+}
+.disabled .block4 {
+    animation: hidingBlock 1s cubic-bezier(0.5,0.1,0.5,1.2) forwards;
+}
+.disabled .block5 {
+    animation: hidingBlock 1s cubic-bezier(0.6,0.1,0.5,1.2) forwards;
+}
+.disabled .block6 {
+    animation: hidingBlock 1s cubic-bezier(0.7,0.1,0.5,1.2) forwards;
+}
+.disabled .block7 {
+    animation: hidingBlock 1s cubic-bezier(0.8,0.1,0.5,1.2) forwards;
+}
+
+
+@keyframes hidingBlock{
+    0% {
+        transform: translate(0%, -50%) scaleX(1);
+    }
+    100% {
+        transform: translate(0%, -50%) scaleX(0);
+    }
+}
+
+
+
+
+
+
+/* LOGO */
+:root {
+    --logoSize: 5.3vw;
+    --logoSizeHalf: calc(var(--logoSize) / 2);
+    --logoPosX: calc(-50% - 50px);
+    --progressPosX: calc(var(--logoPosX) + 80%);
+}
+.lavaWebLogo {
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform: translate(calc(var(--logoPosX) - 0vw), -50%);
+    width: var(--logoSize);
+    height: var(--logoSize);
+    transition: 0.25s linear;
+}
+.removed .lavaWebLogo {
+    transform: translate(calc(var(--logoPosX) - 7vw), -50%);
+    transition: all 0.25s linear;
+}
+
+
+/* LOADING PROGRESS */
+.appLoading {
+    display: flex;
+    justify-content: center;
+    position: absolute;
+    bottom: 50px;
+    width: 100%;
+}
