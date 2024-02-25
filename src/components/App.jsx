@@ -1,10 +1,10 @@
 import * as THREE from 'three'
 import { Canvas, useFrame } from '@react-three/fiber'
-import CanvasRoutes from '../CanvasRoutes.jsx';
+import CanvasRoutes from './CanvasRoutes.jsx';
 import { Suspense, useEffect, useRef, useState } from 'react';
 import { PerformanceMonitor } from '@react-three/drei';
-import BottomLoadComponent from '../HTML/bottomLoadComponent/BottomLoadComponent.jsx';
-import MainScene from './MainScene.jsx';
+import BottomLoadComponent from './HTML/bottomLoadComponent/BottomLoadComponent.jsx';
+import MainScene from './3D/MainScene.jsx';
 
 export default function App(props) {
   const [dpr, setDpr] = useState(1)
@@ -21,7 +21,7 @@ export default function App(props) {
       ref={canvasRef}
       eventPrefix={"client"}
       eventSource={document.querySelector('#root')}
-      // camera={{ fov: 40, position: [0, 0, 9], near: 0.1, far: 150 }}
+      camera={{ fov: 40, position: [0, 0, 9], near: 0.1, far: 150 }}
       dpr={dpr}
     >
       <PerformanceMonitor onIncline={() => setDpr(Math.min(window.devicePixelRatio, 2))} onDecline={() => setDpr(1)} />

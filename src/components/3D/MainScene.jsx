@@ -39,7 +39,7 @@ export default function MainScene(props) {
 
     useFrame((renderer, delta) => {
         // console.log(renderer)
-        // renderer.gl.render(renderer.scene.children[0], renderer.camera)
+        renderer.gl.render(renderer.scene.children[0], renderer.camera)
     })
 
     function CreateScene() {
