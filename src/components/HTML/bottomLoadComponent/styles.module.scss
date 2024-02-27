@@ -6,6 +6,7 @@
     height: 100%;
     // backdrop-filter: blur(0px);
     z-index: 5;
+    pointer-events: none;
 
     &.active {
         animation: blured 2s 2.5s linear;
@@ -81,6 +82,7 @@
     text-transform: uppercase;
     font-size: 14px;
     letter-spacing: 1.1px;
+    opacity: 1;
     animation: glowingText 3s 0s linear infinite alternate;
     transition: 1s;
 

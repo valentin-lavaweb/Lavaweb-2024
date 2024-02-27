@@ -16,12 +16,11 @@ import { OrbitControls } from '@react-three/drei'
 import { useControls } from 'leva'
 import { easing } from 'maath'
 import { WebGLRenderer } from "three";
-// import { Bloom, EffectComposer } from '@react-three/postprocessing'
-import { BlendFunction, BloomEffect, EffectComposer, EffectPass, RenderPass } from "postprocessing";
-// import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
-// import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
-// import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
-// import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
+// import { EffectComposer, EffectPass, RenderPass } from "postprocessing";
+import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
+import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
+import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
+import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
 
 export default function MainScene(props) {
     const materialRef = useRef()
@@ -100,61 +99,58 @@ export default function MainScene(props) {
     } );
 
 
-    // const bloomPass = new UnrealBloomPass( new THREE.Vector2( window.innerWidth, window.innerHeight ) );
-    // bloomPass.threshold = params.threshold;
-    // bloomPass.strength = params.strength;
-    // bloomPass.radius = params.radius;
+    const bloomPass = new UnrealBloomPass( new THREE.Vector2( window.innerWidth, window.innerHeight ) );
+    bloomPass.threshold = params.threshold;
+    bloomPass.strength = params.strength;
+    bloomPass.radius = params.radius;
 
-    // const composer = new EffectComposer( three.gl );
-    // composer.addPass( new RenderPass( three.scene, three.camera ) ); //Он почему-то рендерит только всю сцену, scene.children[0 \ 1 \ 2] рендерит только фон....
-    // composer.addPass( bloomPass );
+    const composer = new EffectComposer( three.gl );
+    composer.addPass( new RenderPass( three.scene, three.camera ) ); //Он почему-то рендерит только всю сцену, scene.children[0 \ 1 \ 2] рендерит только фон....
+    composer.addPass( bloomPass );
     // composer.addPass( outputPass );
 
 
-    const effectComposer = new EffectComposer(three.gl);
-    effectComposer.setSize(window.innerWidth, window.innerHeight)
-    effectComposer.addPass(new RenderPass(three.scene, three.camera));
-    effectComposer.addPass(new EffectPass(three.camera, new BloomEffect({
-        blendFunction: BlendFunction.ADD,
-        luminanceThreshold: 0.2,
-        luminanceSmoothing: 0.01,
-        resolutionScale: 0.5,
-        intensity: 10,
-        mipmapBlur: true
-    })));
+    // const effectComposer = new EffectComposer(three.gl);
+    // effectComposer.setSize(window.innerWidth, window.innerHeight)
+    // effectComposer.addPass(new RenderPass(three.scene, three.camera));
+    // effectComposer.addPass(new EffectPass(three.camera, new GlitchEffect()));
 
     useFrame((renderer, delta) => {
-        // // console.log(composer)
-        // easing.damp(renderer.camera.position, 'y', -props.deltaY.current * 1, 1 , delta)
-        // currentTarget.current = Math.floor(props.deltaY.current) % scenes.length
-        // if (currentTarget.current < 0) {
-        //     currentTarget.current = 3 + currentTarget.current;
-        // }
+        // console.log(composer)
+        easing.damp(renderer.camera.position, 'y', -props.deltaY.current * 1, 1 , delta)
+        currentTarget.current = Math.floor(props.deltaY.current) % scenes.length
+        if (currentTarget.current < 0) {
+            currentTarget.current = 3 + currentTarget.current;
+        }
 
-        // // Зарендерили 1 сцену
-        // renderer.gl.setRenderTarget(targets[currentTarget.current])
-        // renderer.gl.render(renderer.scene.children[currentTarget.current + 1], renderer.camera)
-        // // Переключили значение
-        // next.current = (currentTarget.current + 1) % scenes.length
-        // // Зарендерили 2 сцену
-        // renderer.gl.setRenderTarget(targets[next.current])  
-        // renderer.gl.render(renderer.scene.children[next.current + 1], renderer.camera)
-        // // Применили зарендеренные текстуры в главном шейдере
-        // shader.current.uniforms.uTexture1.value = targets[currentTarget.current].texture
-        // shader.current.uniforms.uTexture2.value = targets[next.current].texture
-        // // 
-        // renderer.gl.setRenderTarget(null)
-        // // 
-        // easing.damp(shader.current.uniforms.uProgress, 'value', 
-        // props.deltaY.current%1 < 0 ? (props.deltaY.current%1) + 1 : props.deltaY.current%1 ,
-        // 0,
-        // delta)
-        // // Final render
+        // Зарендерили 1 сцену
+        renderer.gl.setRenderTarget(targets[currentTarget.current])
+        renderer.gl.render(renderer.scene.children[currentTarget.current + 1], renderer.camera)
+        // Переключили значение
+        next.current = (currentTarget.current + 1) % scenes.length
+        // Зарендерили 2 сцену
+        renderer.gl.setRenderTarget(targets[next.current])  
+        renderer.gl.render(renderer.scene.children[next.current + 1], renderer.camera)
+        // Применили зарендеренные текстуры в главном шейдере
+        shader.current.uniforms.uTexture1.value = targets[currentTarget.current].texture
+        shader.current.uniforms.uTexture2.value = targets[next.current].texture
+        // 
+        renderer.gl.setRenderTarget(null)
+        // 
+        easing.damp(shader.current.uniforms.uProgress, 'value', 
+        props.deltaY.current%1 < 0 ? (props.deltaY.current%1) + 1 : props.deltaY.current%1 ,
+        0.1,
+        delta)
+        // Final render
         
-        // renderer.gl.render(renderer.scene.children[1], renderer.camera)
-        console.log(effectComposer)
-        effectComposer.render()
+        // renderer.gl.render(renderer.scene.children[0], renderer.camera)
+        composer.render(renderer.scene.children[0], renderer.camera)
     }, 1)
+
+    // useFrame((renderer, delta) => {
+    //     // console.log(renderer.gl)    
+    //     composer.render(renderer.scene.children[0], renderer.camera)
+    // }, 1)
 
     function InitPost() {
 
@@ -162,7 +158,7 @@ export default function MainScene(props) {
         <scene>
             <mesh>
                 <planeGeometry args={[2, 2]}/>
-                {/* <shaderMaterial ref={shader}
+                <shaderMaterial ref={shader}
                     // side={THREE.DoubleSide}
                     // blending={THREE.AdditiveBlending}
                     colorSpace={THREE.SRGBColorSpace}
@@ -176,8 +172,7 @@ export default function MainScene(props) {
                     }
                     vertexShader={vertexShader}
                     fragmentShader={fragmentShader}
-                /> */}
-                <meshBasicMaterial />
+                />
             </mesh>
         </scene>
         </>
@@ -201,22 +196,23 @@ export default function MainScene(props) {
         function groupRotation(sceneNumber, delta) {
             three.scene.children[sceneNumber].children[1].rotation.y += delta * 0.02
         }
-        // useFrame((renderer, delta) => {
-        //     // console.log(three.scene)
-        //     // groupRotation(0, delta)
-        //     // groupRotation(1, delta)
-        //     // groupRotation(2, delta)
-        // })
+        useFrame((renderer, delta) => {
+            // console.log(renderer.scene)
+            groupRotation(1, delta)
+            groupRotation(2, delta)
+            groupRotation(3, delta)
+        })
         return <>
             {scenes.map((scene, sceneIndex)=>{
                 return (
                 <scene key={sceneIndex} background={scene.bg} position={[0, -sceneIndex * viewport.height / 2, 0]}>
+                {/* <scene makeDefault key={sceneIndex} position={[0, 0, 0]}> */}
                     <perspectiveCamera position={[0, 0, 0]}/>
-                    <group scale={0.3}>
-                        <mesh scale={0.4}>
-                            <boxGeometry />
-                            <meshStandardMaterial emissive={[2, 0, 0]}/>
-                        </mesh>
+                    <mesh scale={0.4}>
+                        <boxGeometry />
+                        <meshStandardMaterial emissive={[2, 0, 0]}/>
+                    </mesh>
+                    <group>
                         {meshes.map((mesh, meshIndex) => {
                             return (
                             <mesh 
@@ -240,9 +236,6 @@ export default function MainScene(props) {
     return <>
     <InitPost />
     <CreateScene />
-    {/* <EffectComposer multisampling={0} disableNormalPass={true}>
-        <Bloom />
-    </EffectComposer> */}
-    <OrbitControls />
+    {/* <OrbitControls /> */}
     </>
 }

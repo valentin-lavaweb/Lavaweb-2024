@@ -28,7 +28,7 @@
           if (loadingContainer.hidden === false) {
             requestAnimationFrame(updateProgress);
           } else {
-            preloaderContainer.remove()
+            preloaderContainer.style.cssText = "display: none"
             // preloaderContainer.classList.add('hidden')
             // setTimeout(() => {
             //   preloaderContainer.remove()
