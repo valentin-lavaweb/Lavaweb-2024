@@ -19,7 +19,7 @@ export default function BackgroundLavaComponent(props) {
     })
 
     useFrame((renderer, delta) => {
-        materialRef.current.iTime += delta * 0.05
+        materialRef.current.uTime += delta * 0.05
         // lavaMesh.current.position.y = renderer.camera.position.y
     })
 
@@ -29,8 +29,8 @@ export default function BackgroundLavaComponent(props) {
 
 
     return <>
-    <mesh ref={lavaMesh} position={[0, 0, -5]} rotation={[0, 0, 0]}>
-        <planeGeometry args={[three.viewport.width * 1.6, three.viewport.height * 1.6]}/>
+    <mesh ref={lavaMesh} position={[0, 0, 0]} rotation={[0, 0, 0]}>
+        <planeGeometry args={[2.0, 2.0]}/>
         <lavaMaterial ref={materialRef} backgroundTexture={backgroundTexture} noiseTexture={noiseTexture} distortionPower={controls.distortionPower}
         distortionScale={controls.distortionScale}/>
     </mesh>
@@ -46,8 +46,8 @@ export const LavaMaterial = shaderMaterial(
       distortionScale: null,
       distortionColor: new THREE.Color("#1b476f"),
       uResolution: new THREE.Vector2(window.innerWidth, window.innerHeight),
-      uLiquidScale: 1.0,
-      iTime: 0.0,
+      uLiquidScale: 0.9,
+      uTime: 0.0,
     },
     
     /* glsl */
@@ -83,7 +83,8 @@ export const LavaMaterial = shaderMaterial(
         vUv.y = vUv.y * aspectY + yOffset;
         
         // Применяем искажение к однородным координатам uv
-        gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
+        // gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
+        gl_Position = vec4( position, 1.0 );
     }`
     ,
         
@@ -94,16 +95,16 @@ export const LavaMaterial = shaderMaterial(
     uniform sampler2D noiseTexture;
     uniform vec3 distortionColor;
     uniform float distortionPower;
-    uniform float iTime;
+    uniform float uTime;
 
     void main() {  
         // Получаем шум
         float noise = texture(noiseTexture, vUv).r;
 
-        vec2 offset = distortionPower * vec2(fract(noise + iTime) * 0.75);
+        vec2 offset = distortionPower * vec2(fract(noise + uTime) * 0.75);
         
     
-        // Получаем искаженные координаты UV с использованием iTime в качестве коэффициента масштабирования
+        // Получаем искаженные координаты UV с использованием uTime в качестве коэффициента масштабирования
         vec2 distortedUV = vUv + offset;
     
         // Используем искаженные координаты UV для сэмплирования текстуры

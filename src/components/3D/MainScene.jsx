@@ -1,6 +1,6 @@
 import * as THREE from 'three'
 import GUI from 'lil-gui'
-import { useEffect, useRef } from 'react'
+import { useEffect, useMemo, useRef } from 'react'
 
 import vertexShader from '../3D/shaders/vertex.glsl'
 import blurVertexShader from '../3D/shaders/vertexBlur.glsl'
@@ -16,133 +16,83 @@ import { OrbitControls } from '@react-three/drei'
 import { useControls } from 'leva'
 import { easing } from 'maath'
 import { WebGLRenderer } from "three";
-// import { Bloom, EffectComposer } from '@react-three/postprocessing'
-import { BlendFunction, BloomEffect, EffectComposer, EffectPass, RenderPass } from "postprocessing";
-// import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
-// import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
-// import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
-// import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
+import { BlendFunction, BloomEffect, CopyPass, EffectComposer, EffectPass, RenderPass } from "postprocessing";
+import BackgroundLavaComponent from './background/BackgroundLavaComponent'
 
-export default function MainScene(props) {
-    const materialRef = useRef()
-    const meshRef = useRef()
+export default function MainScene(props, {
+    effectComposer = new EffectComposer( useThree().gl ),
+    targets = [
+        {target: new THREE.WebGLRenderTarget(window.innerWidth, window.innerHeight, {
+            colorSpace: THREE.SRGBColorSpace,
+        })},
+        {target: new THREE.WebGLRenderTarget(window.innerWidth, window.innerHeight, {
+            colorSpace: THREE.SRGBColorSpace,
+        })},
+        {target: new THREE.WebGLRenderTarget(window.innerWidth, window.innerHeight, {
+            colorSpace: THREE.SRGBColorSpace,
+        })},
+        {target: new THREE.WebGLRenderTarget(window.innerWidth, window.innerHeight, {
+            colorSpace: THREE.SRGBColorSpace,
+        })},
+    ]  
+}) {
     const shader = useRef()
-    const bloomShader = useRef()
-    const {viewport} = useThree()
+    const transitionScene = useRef()
+    const scenesRef = useRef()
+    const scene1 = useRef()
+    const scene2 = useRef()
+    const scene3 = useRef()
+    const scene4 = useRef()
     const three = useThree()
-    const matcapMaterial1 = new THREE.TextureLoader().load('/matcaps/matcap1.png')
-    const matcapMaterial2 = new THREE.TextureLoader().load('/matcaps/matcap2.png')
-    const matcapMaterial3 = new THREE.TextureLoader().load('/matcaps/matcap3.png')
-    const bg1 = new THREE.TextureLoader().load('/backgrounds/bg1.png')
-    const bg2 = new THREE.TextureLoader().load('/backgrounds/bg2.png')
-    const bg3 = new THREE.TextureLoader().load('/backgrounds/bg3.png')
-    const scenes = [
-        {
-            bg: bg1,
-            matcap: matcapMaterial1,
-            geometry: new THREE.BoxGeometry(0.1, 0.1, 0.1)
-        },
-        {
-            bg: bg2,
-            matcap: matcapMaterial2,
-            geometry: new THREE.SphereGeometry(0.05, 5, 5)
-        },
-        {
-            bg: bg3,
-            matcap: matcapMaterial3,
-            geometry: new THREE.PlaneGeometry(0.1, 0.1)
-        },
-    ]
-    const meshes = Array.from({ length: 300 }, () => ({
-        positionRandom: new THREE.Vector3().randomDirection(),
-        rotationRandom: Math.PI * Math.random(),
-    }))
-    const targets = []
-    const transitionPlaneTarget = new THREE.WebGLRenderTarget(window.innerWidth, window.innerHeight, {
-        colorSpace: THREE.SRGBColorSpace,
-    })
+    const loader = new THREE.TextureLoader()
+    const bg1 = loader.load('/backgrounds/bg1.png')
+    const bg2 = loader.load('/backgrounds/bg2.png')
+    const bg3 = loader.load('/backgrounds/bg3.png')
     const currentTarget = useRef(0)
     const next = useRef(0)
     const settings = {
-        threshold: 0.0,
-        strength: 1.0,
-        radius: 10.0,
-    }
-    const params = {
-        threshold: 0.275,
-        strength: 0.5,
-        radius: 0.2,
-        exposure: 1.0
-    };
-
-    // const gui = new GUI();
-    // gui.add(settings, "threshold", 0.0, 1.0, 0.01).onChange((val)=> {})
-    // gui.add(settings, "strength", 0.0, 10.0, 0.01).onChange((val)=> {})
-    // gui.add(settings, "radius", 0.0, 10.0, 0.01).onChange((val)=> {})
-
-    const gui = new GUI();
-    const bloomFolder = gui.addFolder( 'bloom' );
-
-    bloomFolder.add( params, 'threshold', 0.0, 1.0 ).onChange( function ( value ) {
-        bloomPass.threshold = Number( value );
-    } );
-
-    bloomFolder.add( params, 'strength', 0.0, 3.0 ).onChange( function ( value ) {
-        bloomPass.strength = Number( value );
-    } );
-
-    gui.add( params, 'radius', 0.0, 1.0 ).step( 0.01 ).onChange( function ( value ) {
-        bloomPass.radius = Number( value );
-    } );
-    const toneMappingFolder = gui.addFolder( 'tone mapping' );
-    toneMappingFolder.add( params, 'exposure', 0.1, 2 ).onChange( function ( value ) {
-        three.gl.toneMappingExposure = Math.pow( value, 4.0 );
-    } );
-
-
-    // const bloomPass = new UnrealBloomPass( new THREE.Vector2( window.innerWidth, window.innerHeight ) );
-    // bloomPass.threshold = params.threshold;
-    // bloomPass.strength = params.strength;
-    // bloomPass.radius = params.radius;
-
-    // const composer = new EffectComposer( three.gl );
-    // composer.addPass( new RenderPass( three.scene, three.camera ) ); //Он почему-то рендерит только всю сцену, scene.children[0 \ 1 \ 2] рендерит только фон....
-    // composer.addPass( bloomPass );
-    // composer.addPass( outputPass );
-
-
-    const effectComposer = new EffectComposer( three.gl );
-    // effectComposer.setSize(window.innerWidth, window.innerHeight)
-    effectComposer.addPass(new RenderPass(three.scene, three.camera));
-    effectComposer.addPass(new EffectPass(three.camera, new BloomEffect({
-        blendFunction: BlendFunction.ADD,
-        luminanceThreshold: 0.05,
-        luminanceSmoothing: 0.01,
+        luminanceThreshold: 0.3,
+        luminanceSmoothing: 0.05,
         resolutionScale: 1.0,
-        intensity: 10,
-        mipmapBlur: true
-    })));
+        intensity: 2.0,
+    }
+    // const gui = new GUI();
+    // gui.add(settings, "luminanceThreshold", 0.0, 1.0, 0.01).onChange((val)=> {})
+    // gui.add(settings, "luminanceSmoothing", 0.0, 10.0, 0.01).onChange((val)=> {})
+    // gui.add(settings, "resolutionScale", 0.0, 2.0, 0.01).onChange((val)=> {})
+    // gui.add(settings, "intensity", 0.0, 10.0, 0.01).onChange((val)=> {})
+
+    
+    useEffect(() => {
+        for (let i = 0; i < scenesRef.current.children.length; i++) {
+            three.gl.compile(three.scene.children[1].children[i], three.camera)
+        }   
+        
+    }, [])
 
     useFrame((renderer, delta) => {
-        // console.log(composer)
-        effectComposer.render()
-        easing.damp(renderer.camera.position, 'y', -props.deltaY.current * 1, 1 , delta)
-        currentTarget.current = Math.floor(props.deltaY.current) % scenes.length
+        console.log(currentTarget.current)
+        // easing.damp(renderer.camera.position, 'y', -props.deltaY.current * 1, 1 , delta)
+        currentTarget.current = Math.floor(props.deltaY.current) % scenesRef.current.children.length
         if (currentTarget.current < 0) {
-            currentTarget.current = 3 + currentTarget.current;
+            // alert(currentTarget.current)
+            currentTarget.current = scenesRef.current.children.length + currentTarget.current % scenesRef.current.children.length;
+            // currentTarget.current = scenesRef.current.children.length % scenesRef.current.children.length;
         }
 
         // Зарендерили 1 сцену
-        renderer.gl.setRenderTarget(targets[currentTarget.current])
-        renderer.gl.render(renderer.scene.children[currentTarget.current + 1], renderer.camera)
-        // Переключили значение
-        next.current = (currentTarget.current + 1) % scenes.length
-        // Зарендерили 2 сцену
-        renderer.gl.setRenderTarget(targets[next.current])  
-        renderer.gl.render(renderer.scene.children[next.current + 1], renderer.camera)
-        // Применили зарендеренные текстуры в главном шейдере
-        shader.current.uniforms.uTexture1.value = targets[currentTarget.current].texture
-        shader.current.uniforms.uTexture2.value = targets[next.current].texture
+        if (targets != null) {
+            renderer.gl.setRenderTarget(targets[currentTarget.current].target)
+            renderer.gl.render(scenesRef.current.children[currentTarget.current], renderer.camera)
+            // Переключили значение
+            next.current = (currentTarget.current + 1) % scenesRef.current.children.length
+            // Зарендерили 2 сцену
+            renderer.gl.setRenderTarget(targets[next.current].target)  
+            renderer.gl.render(scenesRef.current.children[next.current], renderer.camera)
+            // Применили зарендеренные текстуры в главном шейдере
+            shader.current.uniforms.uTexture1.value = targets[currentTarget.current].target.texture
+            shader.current.uniforms.uTexture2.value = targets[next.current].target.texture
+        }
         // 
         renderer.gl.setRenderTarget(null)
         // 
@@ -151,20 +101,31 @@ export default function MainScene(props) {
         0,
         delta)
         // Final render
-        three.gl.render(renderer.scene.children[0], renderer.camera)
-        // effectComposer.render()
+        effectComposer.render()
 
     }, 1)
 
     function InitPost() {
 
+        useEffect(() => {
+            effectComposer.addPass(new RenderPass(transitionScene.current, three.camera));
+            effectComposer.addPass(new EffectPass(three.camera, new BloomEffect({
+                blendFunction: BlendFunction.ADD,
+                luminanceThreshold: settings.luminanceThreshold,
+                luminanceSmoothing: settings.luminanceSmoothing,
+                resolutionScale: settings.resolutionScale,
+                intensity: settings.intensity,
+                mipmapBlur: true
+            })));
+        }, [])
+
         return <>
-        <scene>
+        <scene ref={transitionScene}>
             <mesh>
                 <planeGeometry args={[2, 2]}/>
                 <shaderMaterial ref={shader}
                     // side={THREE.DoubleSide}
-                    // blending={THREE.AdditiveBlending}
+                    blending={THREE.AdditiveBlending}
                     colorSpace={THREE.SRGBColorSpace}
                     uniforms={
                         {
@@ -183,66 +144,35 @@ export default function MainScene(props) {
         </>
     }
 
-    function CreateScene() {
-
-        useEffect(() => {
-            for (let i = 0; i < scenes.length + 1; i++) {
-                three.gl.compile(three.scene.children[i], three.camera)
-                const target = new THREE.WebGLRenderTarget(window.innerWidth, window.innerHeight, {
-                    // samples: 2, 
-                    // anisotropy: 32, 
-                    colorSpace: THREE.SRGBColorSpace,
-                    // colorSpace: THREE.LinearSRGBColorSpace,
-                })
-                targets.push(target)
-            }
-        }, [])
-
-        function groupRotation(sceneNumber, delta) {
-            three.scene.children[sceneNumber].children[1].rotation.y += delta * 0.02
-        }
-        // useFrame((renderer, delta) => {
-        //     // console.log(three.scene)
-        //     // groupRotation(0, delta)
-        //     // groupRotation(1, delta)
-        //     // groupRotation(2, delta)
-        // })
-        return <>
-            {scenes.map((scene, sceneIndex)=>{
-                return (
-                <scene key={sceneIndex} background={scene.bg} position={[0, -sceneIndex * viewport.height / 2, 0]}>
-                    <perspectiveCamera position={[0, 0, 0]}/>
-                    <group scale={0.3}>
-                        <mesh scale={0.4}>
-                            <boxGeometry />
-                            <meshStandardMaterial emissive={[2, 0, 0]}/>
-                        </mesh>
-                        {meshes.map((mesh, meshIndex) => {
-                            return (
-                            <mesh 
-                            position={mesh.positionRandom}
-                            rotation={[mesh.rotationRandom, mesh.rotationRandom, mesh.rotationRandom]}
-                            geometry={scene.geometry}
-                            key={meshIndex}
-                            ref={meshRef}
-                            >
-                                <meshMatcapMaterial matcap={scene.matcap} />
-                            </mesh>
-                            )
-                        })}
-                    </group>
-                </scene>
-                )
-            })}
-        </>
-    }
-
     return <>
     <InitPost />
-    <CreateScene />
-    {/* <EffectComposer multisampling={0} disableNormalPass={true}>
-        <Bloom />
-    </EffectComposer> */}
+    <group ref={scenesRef}>
+        <scene ref={scene1} position={[-0.5, 0, 0]}>
+            <perspectiveCamera/>
+            <BackgroundLavaComponent />
+        </scene>
+        <scene ref={scene2} background={bg2} position={[0, 0, 0]}>
+            <perspectiveCamera/>
+            <mesh>
+                <boxGeometry />
+                <meshBasicMaterial color={'yellow'}/>
+            </mesh>
+        </scene>
+        <scene ref={scene3} background={bg3} position={[0.5, 0, 0]}>
+            <perspectiveCamera/>
+            <mesh>
+                <boxGeometry />
+                <meshBasicMaterial color={'purple'}/>
+            </mesh>
+        </scene>
+        <scene ref={scene4} background={bg1} position={[0.5, 0, 0]}>
+            <perspectiveCamera/>
+            <mesh>
+                <boxGeometry />
+                <meshBasicMaterial color={'red'}/>
+            </mesh>
+        </scene>
+    </group>
     {/* <OrbitControls /> */}
     </>
 }

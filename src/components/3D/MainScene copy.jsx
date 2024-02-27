@@ -147,11 +147,6 @@ export default function MainScene(props) {
         composer.render(renderer.scene.children[0], renderer.camera)
     }, 1)
 
-    // useFrame((renderer, delta) => {
-    //     // console.log(renderer.gl)    
-    //     composer.render(renderer.scene.children[0], renderer.camera)
-    // }, 1)
-
     function InitPost() {
 
         return <>
