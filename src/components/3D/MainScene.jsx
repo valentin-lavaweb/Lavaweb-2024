@@ -111,49 +111,49 @@ export default function MainScene(props) {
     // composer.addPass( outputPass );
 
 
-    const effectComposer = new EffectComposer(three.gl);
-    effectComposer.setSize(window.innerWidth, window.innerHeight)
+    const effectComposer = new EffectComposer( three.gl );
+    // effectComposer.setSize(window.innerWidth, window.innerHeight)
     effectComposer.addPass(new RenderPass(three.scene, three.camera));
     effectComposer.addPass(new EffectPass(three.camera, new BloomEffect({
         blendFunction: BlendFunction.ADD,
-        luminanceThreshold: 0.2,
+        luminanceThreshold: 0.05,
         luminanceSmoothing: 0.01,
-        resolutionScale: 0.5,
+        resolutionScale: 1.0,
         intensity: 10,
         mipmapBlur: true
     })));
 
     useFrame((renderer, delta) => {
-        // // console.log(composer)
-        // easing.damp(renderer.camera.position, 'y', -props.deltaY.current * 1, 1 , delta)
-        // currentTarget.current = Math.floor(props.deltaY.current) % scenes.length
-        // if (currentTarget.current < 0) {
-        //     currentTarget.current = 3 + currentTarget.current;
-        // }
-
-        // // Зарендерили 1 сцену
-        // renderer.gl.setRenderTarget(targets[currentTarget.current])
-        // renderer.gl.render(renderer.scene.children[currentTarget.current + 1], renderer.camera)
-        // // Переключили значение
-        // next.current = (currentTarget.current + 1) % scenes.length
-        // // Зарендерили 2 сцену
-        // renderer.gl.setRenderTarget(targets[next.current])  
-        // renderer.gl.render(renderer.scene.children[next.current + 1], renderer.camera)
-        // // Применили зарендеренные текстуры в главном шейдере
-        // shader.current.uniforms.uTexture1.value = targets[currentTarget.current].texture
-        // shader.current.uniforms.uTexture2.value = targets[next.current].texture
-        // // 
-        // renderer.gl.setRenderTarget(null)
-        // // 
-        // easing.damp(shader.current.uniforms.uProgress, 'value', 
-        // props.deltaY.current%1 < 0 ? (props.deltaY.current%1) + 1 : props.deltaY.current%1 ,
-        // 0,
-        // delta)
-        // // Final render
-        
-        // renderer.gl.render(renderer.scene.children[1], renderer.camera)
-        console.log(effectComposer)
+        // console.log(composer)
         effectComposer.render()
+        easing.damp(renderer.camera.position, 'y', -props.deltaY.current * 1, 1 , delta)
+        currentTarget.current = Math.floor(props.deltaY.current) % scenes.length
+        if (currentTarget.current < 0) {
+            currentTarget.current = 3 + currentTarget.current;
+        }
+
+        // Зарендерили 1 сцену
+        renderer.gl.setRenderTarget(targets[currentTarget.current])
+        renderer.gl.render(renderer.scene.children[currentTarget.current + 1], renderer.camera)
+        // Переключили значение
+        next.current = (currentTarget.current + 1) % scenes.length
+        // Зарендерили 2 сцену
+        renderer.gl.setRenderTarget(targets[next.current])  
+        renderer.gl.render(renderer.scene.children[next.current + 1], renderer.camera)
+        // Применили зарендеренные текстуры в главном шейдере
+        shader.current.uniforms.uTexture1.value = targets[currentTarget.current].texture
+        shader.current.uniforms.uTexture2.value = targets[next.current].texture
+        // 
+        renderer.gl.setRenderTarget(null)
+        // 
+        easing.damp(shader.current.uniforms.uProgress, 'value', 
+        props.deltaY.current%1 < 0 ? (props.deltaY.current%1) + 1 : props.deltaY.current%1 ,
+        0,
+        delta)
+        // Final render
+        three.gl.render(renderer.scene.children[0], renderer.camera)
+        // effectComposer.render()
+
     }, 1)
 
     function InitPost() {
@@ -162,7 +162,7 @@ export default function MainScene(props) {
         <scene>
             <mesh>
                 <planeGeometry args={[2, 2]}/>
-                {/* <shaderMaterial ref={shader}
+                <shaderMaterial ref={shader}
                     // side={THREE.DoubleSide}
                     // blending={THREE.AdditiveBlending}
                     colorSpace={THREE.SRGBColorSpace}
@@ -176,8 +176,8 @@ export default function MainScene(props) {
                     }
                     vertexShader={vertexShader}
                     fragmentShader={fragmentShader}
-                /> */}
-                <meshBasicMaterial />
+                />
+                {/* <meshBasicMaterial /> */}
             </mesh>
         </scene>
         </>
@@ -243,6 +243,6 @@ export default function MainScene(props) {
     {/* <EffectComposer multisampling={0} disableNormalPass={true}>
         <Bloom />
     </EffectComposer> */}
-    <OrbitControls />
+    {/* <OrbitControls /> */}
     </>
 }
