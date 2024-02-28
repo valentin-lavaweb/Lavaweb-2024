@@ -20,6 +20,8 @@ export default function App(props) {
   }, [dpr])
   const lethargy = new Lethargy()
   const deltaY = useRef(0)
+  const scroll = useRef(0)
+  const transitionShader = useRef()
 
 
   const bind = useGesture({
@@ -29,6 +31,10 @@ export default function App(props) {
       // console.log(state)
     },
   });
+
+  useEffect(() => {
+    console.log(transitionShader.current)
+  }, [])
   
   return <>
     <Canvas
@@ -40,15 +46,17 @@ export default function App(props) {
       dpr={dpr}
       {...bind()}
       onWheel={(e) => {
-        deltaY.current += e.deltaY / 2500
-        // console.log(deltaY.current % 3)
+        deltaY.current += (e.deltaY / 3000) % 4
+        scroll.current += e.deltaY / 1000 % 4
+        console.log(scroll.current)
+        // console.log(deltaY.current % 1)
       }}
       
     >
       {/* <PerformanceMonitor onIncline={() => setDpr(Math.min(window.devicePixelRatio, 2))} onDecline={() => setDpr(1)} /> */}
       {/* <PerformanceMonitor factor={1} onChange={({ factor }) => setDpr(Math.min(Math.max(0.5 * factor, 2), 0.9))} /> */}
       <Suspense fallback={null}>
-        <MainScene deltaY={deltaY}/>
+        <MainScene ref={transitionShader} deltaY={deltaY}/>
         {/* <CanvasRoutes
         location={props.location}
         rendered={props.rendered} setRendered={props.setRendered}

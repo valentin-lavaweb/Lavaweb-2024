@@ -1,6 +1,6 @@
 import * as THREE from 'three'
 import GUI from 'lil-gui'
-import { useEffect, useMemo, useRef } from 'react'
+import { forwardRef, useEffect, useMemo, useRef } from 'react'
 
 import vertexShader from '../3D/shaders/vertex.glsl'
 import blurVertexShader from '../3D/shaders/vertexBlur.glsl'
@@ -19,7 +19,7 @@ import { WebGLRenderer } from "three";
 import { BlendFunction, BloomEffect, CopyPass, EffectComposer, EffectPass, RenderPass } from "postprocessing";
 import BackgroundLavaComponent from './background/BackgroundLavaComponent'
 
-export default function MainScene(props, {
+export default forwardRef(function MainScene(props, {
     effectComposer = new EffectComposer( useThree().gl ),
     targets = [
         {target: new THREE.WebGLRenderTarget(window.innerWidth, window.innerHeight, {
@@ -34,10 +34,11 @@ export default function MainScene(props, {
         {target: new THREE.WebGLRenderTarget(window.innerWidth, window.innerHeight, {
             colorSpace: THREE.SRGBColorSpace,
         })},
-    ]  
+    ],
+    ref,
 }) {
-    const shader = useRef()
     const transitionScene = useRef()
+    const shaderRef = useRef()
     const scenesRef = useRef()
     const scene1 = useRef()
     const scene2 = useRef()
@@ -71,13 +72,12 @@ export default function MainScene(props, {
     }, [])
 
     useFrame((renderer, delta) => {
-        console.log(currentTarget.current)
+        // console.log(currentTarget.current)
         // easing.damp(renderer.camera.position, 'y', -props.deltaY.current * 1, 1 , delta)
         currentTarget.current = Math.floor(props.deltaY.current) % scenesRef.current.children.length
         if (currentTarget.current < 0) {
             // alert(currentTarget.current)
             currentTarget.current = scenesRef.current.children.length + currentTarget.current % scenesRef.current.children.length;
-            // currentTarget.current = scenesRef.current.children.length % scenesRef.current.children.length;
         }
 
         // Зарендерили 1 сцену
@@ -90,16 +90,17 @@ export default function MainScene(props, {
             renderer.gl.setRenderTarget(targets[next.current].target)  
             renderer.gl.render(scenesRef.current.children[next.current], renderer.camera)
             // Применили зарендеренные текстуры в главном шейдере
-            shader.current.uniforms.uTexture1.value = targets[currentTarget.current].target.texture
-            shader.current.uniforms.uTexture2.value = targets[next.current].target.texture
+            shaderRef.current.uniforms.uTexture1.value = targets[currentTarget.current].target.texture
+            shaderRef.current.uniforms.uTexture2.value = targets[next.current].target.texture
         }
         // 
         renderer.gl.setRenderTarget(null)
         // 
-        easing.damp(shader.current.uniforms.uProgress, 'value', 
-        props.deltaY.current%1 < 0 ? (props.deltaY.current%1) + 1 : props.deltaY.current%1 ,
-        0,
-        delta)
+        easing.damp(shaderRef.current.uniforms.uProgress, 'value', 
+            props.deltaY.current%1 < 0 ? (props.deltaY.current%1) + 1 : props.deltaY.current%1 ,
+            0,
+            delta
+        )
         // Final render
         effectComposer.render()
 
@@ -123,7 +124,7 @@ export default function MainScene(props, {
         <scene ref={transitionScene}>
             <mesh>
                 <planeGeometry args={[2, 2]}/>
-                <shaderMaterial ref={shader}
+                <shaderMaterial ref={shaderRef}
                     // side={THREE.DoubleSide}
                     blending={THREE.AdditiveBlending}
                     colorSpace={THREE.SRGBColorSpace}
@@ -175,4 +176,4 @@ export default function MainScene(props, {
     </group>
     {/* <OrbitControls /> */}
     </>
-}
+})

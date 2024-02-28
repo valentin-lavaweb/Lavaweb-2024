@@ -45,6 +45,7 @@ export const LavaMaterial = shaderMaterial(
       distortionPower: null,
       distortionScale: null,
       distortionColor: new THREE.Color("#1b476f"),
+    //   distortionColor: new THREE.Color("#ffffff"),
       uResolution: new THREE.Vector2(window.innerWidth, window.innerHeight),
       uLiquidScale: 0.9,
       uTime: 0.0,
