@@ -96,28 +96,12 @@ export default forwardRef(function MainScene(props, {
         // 
         renderer.gl.setRenderTarget(null)
         // 
-        console.log(props.deltaY.current)
-        if (props.deltaY.current % 1 >= 0.7) {
-            easing.damp(shaderRef.current.uniforms.uProgress, 'value', 
-            1.0,
-            1.0,
-            delta
-        )
-            if (shaderRef.current.uniforms.uProgress.value >= 0.96) {
-                props.deltaY.current = next.current
-                shaderRef.current.uniforms.uProgress.value = 0
-            } else {
-                // props.deltaY.current = next.current
-            }
-        } else {
-            easing.damp(shaderRef.current.uniforms.uProgress, 'value', 
-                props.deltaY.current % 1 < 0 ? (props.deltaY.current % 1) + 1 : props.deltaY.current%1 ,
-                Math.abs(props.deltaY.current % 1 - props.scroll.current % 1) >= 0.95 ? 0 : 0.5,
-                1.0,
-                // 0,
-                delta
-            )
-        }
+        easing.damp(shaderRef.current.uniforms.uProgress, 'value', 
+        props.deltaY.current % 1 < 0 ? (props.deltaY.current % 1) + 1 : props.deltaY.current%1 ,
+        Math.abs(props.deltaY.current % 1 - props.scroll.current % 1) >= 0.95 ? 0 : 0.5,
+        1.0,
+        // 0,
+        delta)
         // Final render
         effectComposer.render()
 

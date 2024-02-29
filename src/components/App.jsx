@@ -24,13 +24,13 @@ export default function App(props) {
   const transitionShader = useRef()
 
 
-  const bind = useGesture({
-    onWheel: (state) => {
-      // console.log(state);
-      console.log(lethargy.check(state.event))
-      // console.log(state)
-    },
-  });
+  // const bind = useGesture({
+  //   onWheel: (state) => {
+  //     // console.log(state);
+  //     console.log(lethargy.check(state.event))
+  //     // console.log(state)
+  //   },
+  // });
 
   useEffect(() => {
     // console.log(transitionShader.current)
@@ -44,12 +44,9 @@ export default function App(props) {
       // eventSource={document.querySelector('#root')}
       camera={{ fov: 40, position: [0, 0, 3], near: 0.1, far: 150 }}
       dpr={dpr}
-      {...bind()}
+      // {...bind()}
       onWheel={(e) => {
-        scroll.current = deltaY.current
         deltaY.current += (e.deltaY / 3000) % 4
-        // console.log(scroll.current)
-        // console.log(deltaY.current % 1)
       }}
       
     >
@@ -57,11 +54,6 @@ export default function App(props) {
       {/* <PerformanceMonitor factor={1} onChange={({ factor }) => setDpr(Math.min(Math.max(0.5 * factor, 2), 0.9))} /> */}
       <Suspense fallback={null}>
         <MainScene ref={transitionShader} deltaY={deltaY} scroll={scroll}/>
-        {/* <CanvasRoutes
-        location={props.location}
-        rendered={props.rendered} setRendered={props.setRendered}
-        activePage={props.activePage} setActivePage={props.setActivePage}
-        /> */}
       </Suspense>
     </Canvas>
     <BottomLoadComponent />
