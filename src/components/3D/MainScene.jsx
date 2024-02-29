@@ -20,6 +20,7 @@ import { BlendFunction, BloomEffect, CopyPass, EffectComposer, EffectPass, Rende
 import BackgroundLavaComponent from './background/BackgroundLavaComponent'
 
 export default forwardRef(function MainScene(props, {
+    // effectComposer = new EffectComposer( useThree().gl ),
     effectComposer = new EffectComposer( useThree().gl ),
     targets = [
         {target: new THREE.WebGLRenderTarget(window.innerWidth, window.innerHeight, {
@@ -67,12 +68,23 @@ export default forwardRef(function MainScene(props, {
     useEffect(() => {
         for (let i = 0; i < scenesRef.current.children.length; i++) {
             three.gl.compile(three.scene.children[1].children[i], three.camera)
-        }   
+        }
+        setTimeout(() => {
+            effectComposer.addPass(new RenderPass(transitionScene.current, three.camera));
+            effectComposer.addPass(new EffectPass(three.camera, new BloomEffect({
+                blendFunction: BlendFunction.ADD,
+                luminanceThreshold: settings.luminanceThreshold,
+                luminanceSmoothing: settings.luminanceSmoothing,
+                resolutionScale: settings.resolutionScale,
+                intensity: settings.intensity,
+                mipmapBlur: true
+            })));
+        }, 1000);
         
     }, [])
 
     useFrame((renderer, delta) => {
-        // console.log(currentTarget.current)
+        console.log(scenesRef.current.children[currentTarget.current])
         // easing.damp(renderer.camera.position, 'y', -props.deltaY.current * 1, 1 , delta)
         currentTarget.current = Math.floor(props.deltaY.current) % scenesRef.current.children.length
         if (currentTarget.current < 0) {
@@ -98,28 +110,17 @@ export default forwardRef(function MainScene(props, {
         // 
         easing.damp(shaderRef.current.uniforms.uProgress, 'value', 
         props.deltaY.current % 1 < 0 ? (props.deltaY.current % 1) + 1 : props.deltaY.current%1 ,
-        Math.abs(props.deltaY.current % 1 - props.scroll.current % 1) >= 0.95 ? 0 : 0.5,
-        1.0,
-        // 0,
+        0.5,
         delta)
+        scenesRef.current.children[1].children[1].rotation.y += delta
         // Final render
-        effectComposer.render()
+        // effectComposer.render()
+        // renderer.gl.render(renderer.scene, renderer.camera)
+        renderer.gl.render(transitionScene.current, renderer.camera)
 
     }, 1)
 
     function InitPost() {
-
-        useEffect(() => {
-            effectComposer.addPass(new RenderPass(transitionScene.current, three.camera));
-            effectComposer.addPass(new EffectPass(three.camera, new BloomEffect({
-                blendFunction: BlendFunction.ADD,
-                luminanceThreshold: settings.luminanceThreshold,
-                luminanceSmoothing: settings.luminanceSmoothing,
-                resolutionScale: settings.resolutionScale,
-                intensity: settings.intensity,
-                mipmapBlur: true
-            })));
-        }, [])
 
         return <>
         <scene ref={transitionScene}>
@@ -127,7 +128,7 @@ export default forwardRef(function MainScene(props, {
                 <planeGeometry args={[2, 2]}/>
                 <shaderMaterial ref={shaderRef}
                     // side={THREE.DoubleSide}
-                    blending={THREE.AdditiveBlending}
+                    // blending={THREE.AdditiveBlending}
                     colorSpace={THREE.SRGBColorSpace}
                     uniforms={
                         {
